@@ -11,6 +11,9 @@ public class SwiftPlugin: NSObject, FlutterPlugin {
 }
 // <rid:prevent_tree_shake Start>
 func dummyCallsToPreventTreeShaking() {
+    rid_malloc(0);
+    rid_realloc(nil, 0, 0);
+    rid_free(nil, 0);
     rid_poll_reply();
     rid_handled_reply(0);
     _to_dart_for_ReplyStruct();
@@ -31,5 +34,6 @@ func dummyCallsToPreventTreeShaking() {
     _include_Store_field_wrappers();
     rid_msg_Inc(0);
     rid_msg_Add(0, 0);
+    rid_msg_AddStringLen(0, nil);
 }
 // <rid:prevent_tree_shake End>

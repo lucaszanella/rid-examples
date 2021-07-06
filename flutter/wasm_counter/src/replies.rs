@@ -71,6 +71,11 @@ impl From<Reply> for ReplyStruct {
                 req_id,
                 data,
             },
+            Reply::AddedStringLen(req_id) => Self {
+                ty: 2,
+                req_id,
+                data: "".to_string(),
+            },
         }
     }
 }

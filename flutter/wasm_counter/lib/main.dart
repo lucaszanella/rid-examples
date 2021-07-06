@@ -1,9 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:plugin/wasm_binding.dart';
+import 'package:plugin/generated/rid_api.dart';
 import 'package:plugin/wasm/utils.dart';
 
+const WASM_FILE = 'target/wasm32-unknown-unknown/debug/wasm_counter.wasm';
 void main() async {
-  ROOT_URL = 'http://localhost:8080';
+  HTTP_HOST = 'localhost:8080';
+  await initWasm(WASM_FILE);
   final store = await Store.instance;
   runApp(MyApp(store));
 }
@@ -59,6 +63,16 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           FloatingActionButton(
             onPressed: () {
+              _addStringLen();
+            },
+            tooltip: 'Add String Len',
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Icon(Icons.add),
+              Icon(Icons.format_strikethrough_rounded)
+            ]),
+          ),
+          FloatingActionButton(
+            onPressed: () {
               _addTen();
             },
             tooltip: 'Add 10',
@@ -85,7 +99,14 @@ class _MyHomePageState extends State<MyHomePage> {
   void _incrementCounter() {
     widget._store.msgInc().then((res) {
       debugPrint("${widget._store.raw.debug(true)}");
+      debugPrint(widget._store.wasmToString());
       setState(() {});
     });
+  }
+
+  void _addStringLen() async {
+    await widget._store.msgAddStringLen("hello world");
+    debugPrint("${widget._store.raw.debug(true)}");
+    setState(() {});
   }
 }

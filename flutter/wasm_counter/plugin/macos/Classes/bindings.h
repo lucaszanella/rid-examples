@@ -8,6 +8,12 @@ typedef struct RawReplyStruct RawReplyStruct;
 
 typedef struct RawStore RawStore;
 
+uint8_t *rid_malloc(uintptr_t size);
+
+uint8_t *rid_realloc(uint8_t *ptr, uintptr_t old_size, uintptr_t new_size);
+
+void rid_free(uint8_t *ptr, uintptr_t size);
+
 const struct ReplyStruct *rid_poll_reply(void);
 
 void rid_handled_reply(uint64_t req_id);
@@ -358,6 +364,24 @@ void _include_Store_field_wrappers(void);
  *     final msgCall = 'msgAdd($arg0) with reqId: $reqId';
  *     return _replyWithTimeout(reply, msgCall, StackTrace.current, timeout);
  *   }
+ *   Future<PostedReply> msgAddStringLen(String arg0, {Duration? timeout}) {
+ *     final reqId = replyChannel.reqId;
+ *     rid_ffi.rid_msg_AddStringLen(reqId, arg0.toNativeInt8());
+ *
+ *     final reply = _isDebugMode && RID_DEBUG_REPLY != null
+ *         ? replyChannel.reply(reqId).then((PostedReply reply) {
+ *             if (RID_DEBUG_REPLY != null) RID_DEBUG_REPLY!(reply);
+ *             return reply;
+ *           })
+ *         : replyChannel.reply(reqId);
+ *
+ *     if (!_isDebugMode) return reply;
+ *
+ *     timeout ??= RID_MSG_TIMEOUT;
+ *     if (timeout == null) return reply;
+ *     final msgCall = 'msgAddStringLen($arg0) with reqId: $reqId';
+ *     return _replyWithTimeout(reply, msgCall, StackTrace.current, timeout);
+ *   }
  * }
  * extension MsgApiFor_Store on Store {
  *   Future<PostedReply> msgInc({Duration? timeout}) {
@@ -366,6 +390,9 @@ void _include_Store_field_wrappers(void);
  *   Future<PostedReply> msgAdd(@dart_ffi.Int32() int arg0, {Duration? timeout}) {
  *     return _store.msgAdd(arg0, timeout: timeout);
  *   }
+ *   Future<PostedReply> msgAddStringLen(String arg0, {Duration? timeout}) {
+ *     return _store.msgAddStringLen(arg0, timeout: timeout);
+ *   }
  * }
  * ```
  */
@@ -373,11 +400,13 @@ void rid_msg_Inc(uint64_t __rid_req_id);
 
 void rid_msg_Add(uint64_t __rid_req_id, uint32_t arg0);
 
+void rid_msg_AddStringLen(uint64_t __rid_req_id, char *arg0);
+
 /**
  *
  * ```dart
  * /// Dart enum implementation for Rust Reply enum.
- * enum Reply { Increased, Added }
+ * enum Reply { Increased, Added, AddedStringLen }
  * ```
  *
  * ```dart

@@ -1,11 +1,12 @@
 import 'dart:html';
 import 'dart:typed_data';
 
+import 'package:flutter/services.dart';
 import 'package:universal_io/io.dart';
 
-String ROOT_URL = window.location.origin;
-Future<Uint8List> loadWasmFile(String wasmFile) async {
-  final path = '$ROOT_URL/$wasmFile';
+String HTTP_HOST = window.location.host;
+Future<Uint8List> loadWasmFromNetwork(String wasmFile) async {
+  final path = 'http://$HTTP_HOST/$wasmFile';
   try {
     // http-server --cors
     final httpClient = HttpClient();
@@ -26,4 +27,10 @@ Future<Uint8List> loadWasmFile(String wasmFile) async {
     print("Couldn't open $path");
     return Uint8List.fromList([]);
   }
+}
+
+// This is currently not working for web apps
+// It may be useful once we support Wasm for non-web apps
+Future<Uint8List> loadWasmAsset(String wasmAsset) async {
+  return rootBundle.load(wasmAsset).then((bytes) => bytes.buffer.asUint8List());
 }

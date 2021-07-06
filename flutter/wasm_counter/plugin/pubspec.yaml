@@ -15,14 +15,25 @@ ffigen:
     entry-points:
       - 'lib/generated/bindings.h'
 
+wasmjsgen:
+  comments: false
+  output: 'lib/generated/ffigen_binding.dart'
+  headers:
+    entry-points:
+      - 'lib/generated/bindings.h'
+
 dependencies:
   ffi: ^1.0.0
-  ffigen: ^2.4.2
   wasm_interop: ^2.0.0
 
   flutter:
     sdk: flutter
   universal_io: ^2.0.4
+
+dev_dependencies: 
+  ffigen: ^4.0.0-beta.2
+  wasmjsgen:
+    path: ../../../../wasmjsgen/
 
 flutter:
   # This section identifies this Flutter project as a plugin project.

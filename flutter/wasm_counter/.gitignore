@@ -49,3 +49,13 @@ app.*.map.json
 .packages
 .pub/
 build/
+
+# Generated things
+#
+plugin/lib/generated/_isolate_binding.dart
+plugin/lib/generated/_reply_channel.dart
+plugin/lib/generated/bindings.h
+plugin/lib/generated/rid_api.dart
+plugin/lib/generated/rid_api.sav.dart
+plugin/macos/libwasm_counter.a
+plugin/macos/wasm_counter.wasm
